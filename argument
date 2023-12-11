@@ -1,0 +1,56 @@
+# This Python 3 environment comes with many helpful analytics libraries installed
+
+# numpy provide a high level functions and features performing data analysis and manipulation
+import numpy as np # linear algebra
+
+#for use of data modeling, data analysis and data manipulation.
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+
+# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
+
+#os mean importing operating system
+import os
+for dirname, _, filenames in os.walk('/kaggle/'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+
+# Any results you write to the current directory are saved as output. Also you can check the population and energeny consumption.
+
+data = pd.read_excel('/kaggle/input/world-bank-climate-change-data/climate-change-excel-4-6-mb-.xls')
+
+df = data.T.iloc[6:]
+df.drop(df.tail(1).index,inplace=True) 
+
+df = df.where(df.applymap(
+    lambda x: str(x).isdigit()
+))
+
+# simply use DataFrame.fillna to fill the nan's directly
+df = df.fillna(df.median())
+df = df.T
+df  = df.fillna(df.median())
+
+# The plot() function is used to draw points and calculate the mean average of the inputs
+df.mean().plot()
+
+# put the object to float 
+df = df.astype(float)
+
+df = pd.DataFrame(df,dtype = float)
+
+data.iloc[:,6:30] = df
+
+df_last = pd.DataFrame()
+for name in data['Series name'].unique():
+    df_last = df_last.append(data.loc[data['Series name'] == name].iloc[:,6:30].mean(),ignore_index=True )
+
+df_last
+
+df_last['names'] = data['Series name'].unique()
+df_last.drop('names',axis = 1).T.corr().columns = data['Series name'].unique()
+
+df_last.drop('names',axis = 1).T.corr()
+
+
+#transposed dataframes
+df.set_index('names').transpose()
