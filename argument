@@ -16,7 +16,7 @@ for dirname, _, filenames in os.walk('/kaggle/'):
 
 # Any results you write to the current directory are saved as output. Also you can check the population and energeny consumption.
 
-data = pd.read_excel('/kaggle/input/world-bank-climate-change-data/climate-change-excel-4-6-mb-.xls')
+data = pd.read_pickle('/kaggle/input/world-bank-climate-change-data/climate-change-excel-4-6-mb-.xls')
 
 df = data.T.iloc[6:]
 df.drop(df.tail(1).index,inplace=True) 
@@ -46,6 +46,8 @@ for name in data['Series name'].unique():
 
 df_last
 
+
+#Unique function used to clean the data
 df_last['names'] = data['Series name'].unique()
 df_last.drop('names',axis = 1).T.corr().columns = data['Series name'].unique()
 
@@ -54,3 +56,5 @@ df_last.drop('names',axis = 1).T.corr()
 
 #transposed dataframes
 df.set_index('names').transpose()
+
+
